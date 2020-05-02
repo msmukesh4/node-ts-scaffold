@@ -1,0 +1,15 @@
+{
+    "target": "es2017",
+    "defaultSeverity": "error",
+    "module": "commonjs",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "lib": ["es6", "es7"],
+    "sourceMap": true,
+    "jsRules": {},
+    "rules": {
+        "no-console": false
+    },
+    "rulesDirectory": []
+}

@@ -1,0 +1,15 @@
+{
+  "ssl": false,
+  "logging": {
+    "level": "debug",
+    "filePath": "logs/app.log"
+  },
+  "mongo": {
+    "host": "localhost:32768",
+    "port": 32768,
+    "dbname": "scaffold_test",
+    "username": "root",
+    "password": "password",
+    "params": ""
+  }
+}
