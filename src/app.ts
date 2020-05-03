@@ -2,16 +2,15 @@ import express from 'express';
 import log4js from 'log4js'
 import config from './config/config';
 import path from 'path'
-import { Container } from 'inversify';
+import { Container, inject } from 'inversify';
 import { container } from './config/inversify.config';
 import { TestInjection } from './test/TestInjection';
 import { MongoService } from './config/mongo';
 import { User } from './models/mongo/user';
 import bodyParser from 'body-parser'
 import { UserRouter } from './routers/UserRouter';
-import { ExtendedResponse } from './utils/common';
+import { ExtendedResponse } from './utils/genericReqRes';
 import { ConsistentResponseMiddleware } from './middleware/ConsistentResponseMiddleware';
-
 
 
 export class App {
@@ -50,7 +49,7 @@ export class App {
         });
     }
 
-    private async configMongo() {
+    private configMongo() {
         try {
 
             const $mongo = this.container.get<MongoService>(MongoService);
@@ -65,6 +64,12 @@ export class App {
 
         const consistentResponseMiddleware = this.container.get<ConsistentResponseMiddleware>(
             ConsistentResponseMiddleware).middleware;
+
+
+        // use this to turn on maintenance mode 
+        // this.app.use((req, res, next) => {
+        //     res.sendStatus(503);
+        // })
 
         this.app.use('/*', bodyParser.urlencoded({ extended: true }), bodyParser.json({
             verify: function (req: any, res, buf) {

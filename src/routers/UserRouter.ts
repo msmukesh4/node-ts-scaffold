@@ -5,7 +5,9 @@ import { Router } from "express";
 import { HasRoutes } from './HasRoutes';
 import { UserService } from '../services/UserService'
 import config from '../config/config'
-import { ExtendedRequest, ExtendedResponse } from '../utils/common';
+import { ExtendedRequest, ExtendedResponse } from '../utils/genericReqRes';
+import { AuthMiddleware } from '../middleware/AuthMiddleware';
+import { Utils } from '../utils/Utils';
 
 
 @injectable()
@@ -15,7 +17,8 @@ export class UserRouter implements HasRoutes {
     private logger: log4js.Logger;
 
     constructor(
-        @inject(UserService) private $user: UserService
+        @inject(UserService) private $user: UserService,
+        @inject(AuthMiddleware) private $auth: AuthMiddleware
     ) {
         this.logger = log4js.getLogger('UserService');
         this.logger.level = config.get('logging').level;
@@ -52,8 +55,10 @@ export class UserRouter implements HasRoutes {
             }
             this.logger.info("logging user : ", (req as ExtendedRequest).body)
             return this.$user.fetchUserByCredentails(email, password)
-                .then((user) => {
-                    return (res as ExtendedResponse).success(user)
+                .then(async (user) => {
+                    const u = Utils.getJson(user)
+                    u["token"] = await this.$auth.generateToken(user['id'])
+                    return (res as ExtendedResponse).success(u)
                 })
                 .catch((err) => {
                     return (res as ExtendedResponse).unauth(err.message);
@@ -61,9 +66,10 @@ export class UserRouter implements HasRoutes {
         })
 
         // get a user by id
-        router.get('/:id', async (req, res) => {
+        router.get('/:id', this.$auth.authenticate, async (req, res) => {
             let { id } = (req as ExtendedRequest).params
             this.logger.info(`get user by id : ${id}`)
+            this.logger.info(`curr user : `, req['current_user'])
 
             return this.$user.fetchUser(id)
                 .then((user) => {

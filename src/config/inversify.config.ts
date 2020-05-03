@@ -8,6 +8,7 @@ import { UserService } from "../services/UserService";
 import { UserRouter } from '../routers/UserRouter'
 import { UserDAO } from "../dao/UserDAO";
 import { ConsistentResponseMiddleware } from "../middleware/ConsistentResponseMiddleware";
+import { AuthMiddleware } from "../middleware/AuthMiddleware";
 
 
 const container = new Container();
@@ -24,6 +25,7 @@ container.bind<UserRouter>(UserRouter).to(UserRouter);
 
 //extras
 container.bind<TestInjection>(TestInjection).to(TestInjection).inSingletonScope();
+container.bind<AuthMiddleware>(AuthMiddleware).to(AuthMiddleware).inSingletonScope();
 container.bind<ConsistentResponseMiddleware>(ConsistentResponseMiddleware).to(ConsistentResponseMiddleware);
 
 export {container};
