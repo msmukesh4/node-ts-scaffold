@@ -72,6 +72,14 @@ export class ConsistentResponseMiddleware {
                 message: message
             });
         };
+        
+        res.unauth = (message: any) => {
+            res.status(401);
+            res.json({
+                success: false,
+                message: message
+            });
+        };
         next();
     }
 }

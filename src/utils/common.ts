@@ -14,5 +14,5 @@ export interface ExtendedResponse extends Response{
     entityNotFound(msg: string): any;
     respondError(msg: any) : any;
     wrongInput(msg: string): any;
-    status(httpCode: number): any;
+    unauth(msg: any): any;
 }

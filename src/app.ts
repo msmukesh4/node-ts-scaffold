@@ -15,7 +15,7 @@ import { ConsistentResponseMiddleware } from './middleware/ConsistentResponseMid
 
 
 export class App {
-    private static readonly PORT: number = 3000;
+    private static readonly PORT: number = 4000;
     private app: express.Application;
     private logger: log4js.Logger;
     private container: Container = container;
@@ -84,9 +84,30 @@ export class App {
 
         let port = process.env.PORT || App.PORT;
 
+        this.logger.info(`process.env.PORT : ${process.env.PORT}`)
+        this.logger.info(`App.PORT : ${App.PORT}`)
+
         this.app.listen(port, () => {
             this.logger.debug(`server is running on port ${port}`);
         });
+
+        process.on('SIGTERM', () => {
+            this.logger.warn('server is terminated by SIGTERM call');
+            process.exit(0);
+        });
+
+
+        process.on('SIGINT', async () => {
+            this.logger.warn('server is terminated by SIGINT call');
+            process.exit(0);
+        });
+
+        // process.on('SIGKILL',  () =>{
+        //     this.logger.warn('server is terminated by SIGKILL call');
+        //     this.io.close( () => {
+        //         process.exit(0);
+        //     });
+        // });
     }
 
     private testInject() {
