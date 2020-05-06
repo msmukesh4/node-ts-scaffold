@@ -34,7 +34,7 @@ node -e "console.log('Running Node.js ' + process.version)"
 
 Go to the project folder and install dependencies
 ```sh
-cd boutthat-overlay
+cd <proj folder>
 npm install
 ```
 
@@ -47,7 +47,7 @@ Run the project
 ```sh
 
 # dubug mode
-npm run start:watch
+npm run start-watch
 
 # stage mode
 npm run start-stage
